@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/im-gateway-core/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/im-gateway-launcher/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/im-gateway-launcher/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/im-gateway-protocol/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/im-gateway-protocol/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
