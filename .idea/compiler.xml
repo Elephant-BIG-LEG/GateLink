@@ -9,9 +9,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="im-gateway-core" />
         <module name="im-gateway-protocol" />
-        <module name="im-gateway-launcher" />
         <module name="im-gateway-common" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="im-gateway-launcher" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageHeader {
+public class RequestMessageHeader {
     private int magicNumber;      // 魔数，用于协议识别
     private byte version;         // 版本号
     private long msgId;           // 消息ID

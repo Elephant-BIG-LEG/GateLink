@@ -1,7 +1,7 @@
 package com.elephant;
 
-import com.elephant.message.MessageBody;
-import com.elephant.message.MessageHeader;
+import com.elephant.message.RequestMessageBody;
+import com.elephant.message.RequestMessageHeader;
 import lombok.*;
 
 /**
@@ -14,7 +14,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
-    private MessageHeader messageHeader;
-    private MessageBody messageBody;
+public class RequestMessage {
+    private RequestMessageHeader requestMessageHeader;
+    private RequestMessageBody messageBody;
 }
