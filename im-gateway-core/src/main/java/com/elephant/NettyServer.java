@@ -1,6 +1,7 @@
 package com.elephant;
 
 import com.elephant.handler.BusinessLogicHandler;
+import com.elephant.handler.ConnectionRegistryHandler;
 import com.elephant.handler.MyProtocolDecoder;
 import com.elephant.handler.MyProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -21,6 +22,10 @@ public class NettyServer {
 
     // TODO 线程模型优化
 
+    /**
+     * 在当前网管机器上建立长连接
+     * @param port 服务端监听的端口
+     */
     public void start(int port){
         EventLoopGroup bossGroup = new NioEventLoopGroup(2);
         EventLoopGroup workGroup = new NioEventLoopGroup(10);
@@ -33,11 +38,13 @@ public class NettyServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
+                                    // 解码
                                     .addLast(new MyProtocolDecoder())
                                     // TODO 建立注册表
-                                    .addLast(null)
+                                    .addLast(new ConnectionRegistryHandler())
                                     // TODO 下发到业务层中
                                     .addLast(new BusinessLogicHandler())
+                                    // 编码 -- 响应
                                     .addLast(new MyProtocolEncoder());
                         }
                     });

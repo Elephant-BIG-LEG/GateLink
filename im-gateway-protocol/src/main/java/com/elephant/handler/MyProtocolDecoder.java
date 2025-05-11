@@ -7,7 +7,6 @@ import com.elephant.message.MessageStatus;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -17,47 +16,43 @@ import java.util.List;
  * @Date: 2025/05/11/11:44
  * @Description: 入栈消息处理器
  */
-public class MyProtocolDecoder  extends ByteToMessageDecoder {
+public class MyProtocolDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         // 最小 header 大小判断（防止粘包）
-        if (in.readableBytes() < 64) {
+        if (in.readableBytes() < 80) {  // 由于字段类型改变，更新最小字节数
             return;
         }
 
         // Header 解析
         int magic = in.readInt();
         byte version = in.readByte();
-        long msgId = in.readLong();
-        long sessionId = in.readLong();
-        long senderId = in.readLong();
-        long receiverId = in.readLong();
+
+        // 读取字符串字段
+        String msgId = readString(in);
+        String sessionId = readString(in);
+        String senderId = readString(in);
+        String senderDid = readString(in);
+        String receiverId = readString(in);
+
         byte msgType = in.readByte();
         byte contentType = in.readByte();
         byte encType = in.readByte();
         int bodyLen = in.readInt();
         long timestamp = in.readLong();
 
-        int chatSceneLen = in.readInt();
-        byte[] chatSceneBytes = new byte[chatSceneLen];
-        in.readBytes(chatSceneBytes);
-        String chatScene = new String(chatSceneBytes, StandardCharsets.UTF_8);
+        // 解析 chatScene（字符串字段）
+        String chatScene = readString(in);
 
+        // 解析消息状态（枚举）
         byte statusOrdinal = in.readByte();
         MessageStatus status = MessageStatus.values()[statusOrdinal];
 
         // Body 解析
-        long associatedMsgId = in.readLong();
-
-        int contentLen = in.readInt();
-        byte[] contentBytes = new byte[contentLen];
-        in.readBytes(contentBytes);
-        String content = new String(contentBytes, StandardCharsets.UTF_8);
-
-        int attachLen = in.readInt();
-        byte[] attachment = new byte[attachLen];
-        in.readBytes(attachment);
+        String associatedMsgId = readString(in);
+        String content = readString(in);
+        byte[] attachment = readBytes(in);
 
         // 封装对象
         RequestMessageHeader header = RequestMessageHeader.builder()
@@ -66,6 +61,7 @@ public class MyProtocolDecoder  extends ByteToMessageDecoder {
                 .msgId(msgId)
                 .sessionId(sessionId)
                 .senderId(senderId)
+                .senderDid(senderDid)
                 .receiverId(receiverId)
                 .messageType(msgType)
                 .contentType(contentType)
@@ -79,5 +75,21 @@ public class MyProtocolDecoder  extends ByteToMessageDecoder {
         RequestMessageBody body = new RequestMessageBody(associatedMsgId, content, attachment);
 
         out.add(new RequestMessage(header, body));
+    }
+
+    // 辅助方法：读取字符串
+    private String readString(ByteBuf in) {
+        int length = in.readInt();  // 假设字符串前有一个整型长度字段
+        byte[] bytes = new byte[length];
+        in.readBytes(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    // 辅助方法：读取字节数组
+    private byte[] readBytes(ByteBuf in) {
+        int length = in.readInt();
+        byte[] bytes = new byte[length];
+        in.readBytes(bytes);
+        return bytes;
     }
 }

@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestMessageBody {
-    private long associatedMsgId;     // 关联的消息ID（用于回复等场景）
+    private String associatedMsgId;     // 关联的消息ID（用于回复等场景）
     private String content;           // 文本内容
     private byte[] attachment;      // 附件（图片、文件等）
 }

@@ -16,10 +16,11 @@ import lombok.*;
 public class RequestMessageHeader {
     private int magicNumber;      // 魔数，用于协议识别
     private byte version;         // 版本号
-    private long msgId;           // 消息ID
-    private long sessionId;       // 会话ID
-    private long senderId;        // 发送者ID
-    private long receiverId;      // 接收者ID
+    private String msgId;           // 消息ID
+    private String sessionId;       // 会话ID
+    private String senderId;        // 发送者ID
+    private String senderDid;       // 设备ID
+    private String receiverId;      // 接收者ID
     private byte messageType;     // 消息类型（文本/图片/视频等）
     private byte contentType;     // 内容类型（JSON/XML/自定义等）
     private byte encryptionType;  // 加密类型

@@ -1,9 +1,12 @@
 package com.elephant.handler;
 
+import com.elephant.RequestMessage;
 import com.elephant.ResponseMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -15,13 +18,17 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class MyProtocolEncoder extends MessageToByteEncoder<ResponseMessage> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, ResponseMessage msg, ByteBuf out) {
-        // 自定义协议（简洁响应结构）
-        out.writeInt(0xCAFEBABE); // magic number
-        out.writeByte(1);         // version
+    protected void encode(ChannelHandlerContext ctx, ResponseMessage msg, ByteBuf out) throws Exception {
+        // 编码 msgId
         out.writeLong(msg.getMsgId());
+
+        // 编码 sessionId
         out.writeLong(msg.getSessionId());
+
+        // 编码 senderId
         out.writeLong(msg.getSenderId());
-        out.writeByte(msg.getMessageStatus().ordinal()); // 枚举状态压缩成一个字节
+
+        // 编码 messageStatus，假设是枚举类型，使用 ordinal() 获取对应的数字
+        out.writeByte(msg.getMessageStatus().ordinal()); // 将枚举转化为 byte 类型
     }
 }
