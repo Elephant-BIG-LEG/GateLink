@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 /**
  * @Author: Elephant-FZY
  * @Email: https://github.com/Elephant-BIG-LEG
@@ -21,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionRegistryHandler extends SimpleChannelInboundHandler<RequestMessage> {
 
     // UID + DID -> Channel 映射
-    public static final Map<String, Channel> uidChannelMap = new ConcurrentHashMap<>();
+    public static final Map<String, Channel> UID_CHANNL_MAP = new ConcurrentHashMap<>();
 
 
     /**
@@ -44,7 +43,7 @@ public class ConnectionRegistryHandler extends SimpleChannelInboundHandler<Reque
         }
 
         // 将 UID 和 Channel 存入注册表
-        uidChannelMap.put(uid + did, channel);
+        UID_CHANNL_MAP.put(uid + did, channel);
 
         // 其他业务处理...
         // 例如：鉴权、验证等
@@ -69,7 +68,7 @@ public class ConnectionRegistryHandler extends SimpleChannelInboundHandler<Reque
         String did = getDidFromChannel(channel);
         // 从注册表中注销连接
         if (uid != null) {
-            uidChannelMap.remove(uid + did);
+            UID_CHANNL_MAP.remove(uid + did);
             log.debug("连接已关闭，注销用户UID: {} 的DID:{} 设备", uid,did);
         }
 

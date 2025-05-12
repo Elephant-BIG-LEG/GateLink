@@ -27,6 +27,9 @@ public class MyProtocolEncoder extends MessageToByteEncoder<ResponseMessage> {
         // 编码 senderId
         out.writeLong(msg.getSenderId());
 
+        // 编码消息类型
+        out.writeByte(msg.getMessageType().ordinal());
+
         // 编码 messageStatus，假设是枚举类型，使用 ordinal() 获取对应的数字
         out.writeByte(msg.getMessageStatus().ordinal()); // 将枚举转化为 byte 类型
     }

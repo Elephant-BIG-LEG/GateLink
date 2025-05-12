@@ -8,6 +8,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Elephant-FZY
@@ -37,10 +40,14 @@ public class NettyServer {
                             socketChannel.pipeline()
                                     // 解码
                                     .addLast(new MyProtocolDecoder())
-                                    // TODO 心跳
-                                    .addLast(new HeartbeatHandler())
+                                    // TODO 登录校验【不是本项目重点，不做考虑】
+                                    .addLast(null)
                                     // 建立注册表
                                     .addLast(new ConnectionRegistryHandler())
+                                    // 超时捕获
+                                    .addLast(new IdleStateHandler(2, 0, 0, TimeUnit.HOURS))
+                                    // TODO 心跳
+                                    .addLast(new HeartbeatHandler())
                                     // 限流
                                     //.addLast(new RateLimiterHandler())
                                     // TODO 下发到业务层中

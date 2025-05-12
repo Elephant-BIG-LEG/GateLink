@@ -11,5 +11,6 @@ public enum MessageType {
     LOGOUT,
     ACK,
     HEARTBEAT,
-    CHAT
+    CHAT,
+    SERVICE_STATE
 }

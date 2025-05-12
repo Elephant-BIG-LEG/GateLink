@@ -7,6 +7,6 @@ package com.elephant.message;
  * @Description: 消息状态
  */
 public enum MessageStatus {
-    SUCCEED,   // 成功
+    SUCCESS,   // 成功
     FAILED     // 失败
 }
