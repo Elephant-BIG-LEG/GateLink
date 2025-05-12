@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionRegistryHandler extends SimpleChannelInboundHandler<RequestMessage> {
 
     // UID + DID -> Channel 映射
-    private static final Map<String, Channel> uidChannelMap = new ConcurrentHashMap<>();
+    public static final Map<String, Channel> uidChannelMap = new ConcurrentHashMap<>();
 
 
     /**

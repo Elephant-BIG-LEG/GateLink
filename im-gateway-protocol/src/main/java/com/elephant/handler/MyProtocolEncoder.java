@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
  * @Description: 出栈消息处理器
  */
 public class MyProtocolEncoder extends MessageToByteEncoder<ResponseMessage> {
-
     @Override
     protected void encode(ChannelHandlerContext ctx, ResponseMessage msg, ByteBuf out) throws Exception {
         // 编码 msgId

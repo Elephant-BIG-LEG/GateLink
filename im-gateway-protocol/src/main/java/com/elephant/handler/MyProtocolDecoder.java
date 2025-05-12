@@ -1,6 +1,7 @@
 package com.elephant.handler;
 
 import com.elephant.RequestMessage;
+import com.elephant.message.MessageType;
 import com.elephant.message.RequestMessageBody;
 import com.elephant.message.RequestMessageHeader;
 import com.elephant.message.MessageStatus;
@@ -9,7 +10,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 /**
  * @Author: Elephant-FZY
  * @Email: https://github.com/Elephant-BIG-LEG
@@ -36,7 +36,9 @@ public class MyProtocolDecoder extends ByteToMessageDecoder {
         String senderDid = readString(in);
         String receiverId = readString(in);
 
-        byte msgType = in.readByte();
+        // 解析 messageType（枚举）
+        byte msgTypeOrdinal = in.readByte();
+        MessageType messageType = MessageType.values()[msgTypeOrdinal];
         byte contentType = in.readByte();
         byte encType = in.readByte();
         int bodyLen = in.readInt();
@@ -63,7 +65,7 @@ public class MyProtocolDecoder extends ByteToMessageDecoder {
                 .senderId(senderId)
                 .senderDid(senderDid)
                 .receiverId(receiverId)
-                .messageType(msgType)
+                .messageType(messageType)
                 .contentType(contentType)
                 .encryptionType(encType)
                 .bodyLength(bodyLen)

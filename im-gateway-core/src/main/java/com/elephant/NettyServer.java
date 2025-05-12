@@ -1,9 +1,6 @@
 package com.elephant;
 
-import com.elephant.handler.BusinessLogicHandler;
-import com.elephant.handler.ConnectionRegistryHandler;
-import com.elephant.handler.MyProtocolDecoder;
-import com.elephant.handler.MyProtocolEncoder;
+import com.elephant.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -40,8 +37,12 @@ public class NettyServer {
                             socketChannel.pipeline()
                                     // 解码
                                     .addLast(new MyProtocolDecoder())
-                                    // TODO 建立注册表
+                                    // TODO 心跳
+                                    .addLast(new HeartbeatHandler())
+                                    // 建立注册表
                                     .addLast(new ConnectionRegistryHandler())
+                                    // 限流
+                                    //.addLast(new RateLimiterHandler())
                                     // TODO 下发到业务层中
                                     .addLast(new BusinessLogicHandler())
                                     // 编码 -- 响应
