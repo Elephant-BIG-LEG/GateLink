@@ -46,10 +46,10 @@ public class NettyServer {
                                     .addLast(null)
                                     // 建立注册表
                                     .addLast(new ConnectionRegistryHandler())
-                                    // TODO 心跳
+                                    // 心跳
                                     .addLast(new HeartbeatHandler())
                                     // 限流
-                                    //.addLast(new RateLimiterHandler())
+                                    .addLast(new RateLimiterHandler())
                                     // TODO 下发到业务层中
                                     .addLast(new BusinessLogicHandler())
                                     // 编码 -- 响应

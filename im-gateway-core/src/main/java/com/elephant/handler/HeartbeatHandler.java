@@ -77,7 +77,7 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     *
+     * 读取数据
      * @param ctx
      * @param msg
      * @throws Exception
