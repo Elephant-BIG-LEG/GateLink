@@ -10,6 +10,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,8 +46,6 @@ public class NettyServer {
                                     .addLast(null)
                                     // 建立注册表
                                     .addLast(new ConnectionRegistryHandler())
-                                    // 超时捕获
-                                    .addLast(new IdleStateHandler(2, 0, 0, TimeUnit.HOURS))
                                     // TODO 心跳
                                     .addLast(new HeartbeatHandler())
                                     // 限流

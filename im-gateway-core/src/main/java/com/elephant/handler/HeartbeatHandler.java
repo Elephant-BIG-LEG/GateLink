@@ -20,7 +20,7 @@ import java.util.concurrent.ScheduledFuture;
  * @Description: TODO
  * @Function： 返回当前服务的性能情况【维护长连接的数量】、
  *             探活
- *            断连重连【如果发生了断连，开启一个超时计时器】、
+ *             断连重连【如果发生了断连，开启一个超时计时器】、
  */
 @Slf4j
 public class HeartbeatHandler extends ChannelInboundHandlerAdapter {

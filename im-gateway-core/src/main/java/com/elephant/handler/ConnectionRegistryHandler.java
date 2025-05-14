@@ -1,6 +1,7 @@
 package com.elephant.handler;
 
 import com.elephant.RequestMessage;
+import com.elephant.util.ReconnectManager;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -19,72 +20,72 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ConnectionRegistryHandler extends SimpleChannelInboundHandler<RequestMessage> {
 
-    // UID + DID -> Channel 映射
     public static final Map<String, Channel> UID_CHANNL_MAP = new ConcurrentHashMap<>();
 
-
     /**
-     * 建立链接
+     *
      * @param ctx
      * @param msg
      * @throws UnknownHostException
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestMessage msg) throws UnknownHostException {
-        // 解码后，从消息中获取用户 UID
         String uid = msg.getRequestMessageHeader().getSenderId();
         String did = msg.getRequestMessageHeader().getSenderDid();
-        // 获取当前 Channel
         Channel channel = ctx.channel();
 
         // 打印连接信息
         if (log.isDebugEnabled()) {
-            log.debug("新连接注册：UID={},DID={}", uid);
+            log.debug("新连接注册：UID={},DID={}", uid, did);
         }
 
-        // 将 UID 和 Channel 存入注册表
-        UID_CHANNL_MAP.put(uid + did, channel);
+        String key = uid + did;
 
-        // 其他业务处理...
-        // 例如：鉴权、验证等
+        if (UID_CHANNL_MAP.containsKey(key)) {
+            // 客户端重新连接，复用之前的状态
+            Channel previousChannel = UID_CHANNL_MAP.get(key);
+            if (previousChannel != channel) {
+                if (log.isDebugEnabled()){
+                    log.debug("复用之前的状态，更新路由信息：UID={}, DID={}", uid, did);
+                }
+                // 这里只需要更新路由表或其它状态信息
+                UID_CHANNL_MAP.put(key, channel);
+                // 可以在这里执行其它业务，比如重用 session 信息等
+            }
+        } else {
+            // 新连接，注册到映射
+            UID_CHANNL_MAP.put(key, channel);
+        }
 
-        // 向下游传递消息（如果有其他 handler 需要处理）
+        // 启动或取消重连计时器
+        ReconnectManager.cancelReconnectTimer(key);
+        ReconnectManager.startReconnectTimer(channel, uid, did);
+
         ctx.fireChannelRead(msg);
     }
 
-
-    /**
-     * 离线操作
-     * @param ctx
-     * @throws Exception
-     */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         // 连接断开时的清理工作
         Channel channel = ctx.channel();
-        // 获取 UID（可以从 channel 中获取到或者在注册时存储到 Channel 的属性中）
         String uid = getUidFromChannel(channel);
-
         String did = getDidFromChannel(channel);
-        // 从注册表中注销连接
+
+        // 关闭连接前启动重连计时器
         if (uid != null) {
+            ReconnectManager.startReconnectTimer(channel, uid, did);
             UID_CHANNL_MAP.remove(uid + did);
-            log.debug("连接已关闭，注销用户UID: {} 的DID:{} 设备", uid,did);
+            log.debug("连接已关闭，启动重连计时器：UID={}, DID={}", uid, did);
         }
 
         super.channelInactive(ctx);
     }
 
-    // 可能需要这个方法来从 Channel 中获取 UID（假设你在注册时存储了它）
     private String getUidFromChannel(Channel channel) {
-        // 根据你的逻辑返回对应的 UID
-        // 例如，可以存储在 Channel 的属性中
         return (String) channel.attr(AttributeKey.valueOf("uid")).get();
     }
 
     private String getDidFromChannel(Channel channel) {
-        // 根据你的逻辑返回对应的 UID
-        // 例如，可以存储在 Channel 的属性中
         return (String) channel.attr(AttributeKey.valueOf("did")).get();
     }
 }
