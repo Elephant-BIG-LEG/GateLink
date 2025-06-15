@@ -7,9 +7,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="im-gateway-core" />
-        <module name="im-gateway-protocol" />
+        <module name="rpc-SpringBoot-consumer" />
+        <module name="rpc-commer" />
+        <module name="rpc-framerwork" />
+        <module name="rpc-provider" />
         <module name="im-gateway-common" />
+        <module name="im-gateway-core" />
+        <module name="rpc-manager" />
+        <module name="im-gateway-protocol" />
+        <module name="rpc-api" />
+        <module name="rpc-SpringBoot-provider" />
+        <module name="rpc-consumer" />
+        <module name="rpc-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

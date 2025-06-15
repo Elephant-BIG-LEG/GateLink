@@ -8,6 +8,8 @@ import com.elephant.message.MessageStatus;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 /**
@@ -16,10 +18,14 @@ import java.util.List;
  * @Date: 2025/05/11/11:44
  * @Description: 入栈消息处理器
  */
+@Slf4j
 public class MyProtocolDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+        if(log.isDebugEnabled()){
+            log.debug("开始解析");
+        }
         // 最小 header 大小判断（防止粘包）
         if (in.readableBytes() < 80) {  // 由于字段类型改变，更新最小字节数
             return;

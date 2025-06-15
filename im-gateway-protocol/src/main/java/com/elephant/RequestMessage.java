@@ -1,25 +1,21 @@
 package com.elephant;
 
-import com.elephant.message.MessageType;
 import com.elephant.message.RequestMessageBody;
 import com.elephant.message.RequestMessageHeader;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
-
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author: Elephant-FZY
  * @Email: https://github.com/Elephant-BIG-LEG
- * @Date: 2025/05/10/20:43
- * @Description: 消息结构体
+ * @Date: 2025/05/11/12:15
+ * @Description: 请求消息类
  */
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
 public class RequestMessage {
     private RequestMessageHeader requestMessageHeader;
-    private RequestMessageBody messageBody;
+    private RequestMessageBody requestMessageBody;
 }

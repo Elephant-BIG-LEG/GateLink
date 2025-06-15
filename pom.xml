@@ -12,6 +12,7 @@
         <module>im-gateway-protocol</module>
         <module>im-gateway-core</module>
         <module>im-gateway-common</module>
+        <module>ElephantRPC</module>
     </modules>
 
 
